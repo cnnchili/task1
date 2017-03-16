@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>自定义滚动条</title>
+    <link rel="stylesheet" type="text/css" href="resourse/reset.css">
+    <style type="text/css">
+    body {
+        background:#ccc;
+    }
+    /*示例容器样式*/
+    .scroll{
+        width:500px;
+        border:1px solid red;
+        background:#fff;
+        margin: 30px auto;
+    }
+    /*标签切换区样式*/
+    .scroll-tab{
+        height: :34px;
+        border-bottom: 1px solid #e5e5e5;
+        color:#666;
+        background:#f8f8f8;
+    }
+    .scroll-tab .tab-item{
+        float:left;
+        font:14px/34px "微软雅黑";
+        height: 34px;
+        border-right: 1px solid #e5e5e5;
+        text-align: center;
+        padding:20px 20px;
+    }
+    .scroll-tab .tab-active{
+        color:#00be3c;
+        background: #fff;
+        border-top: 2px solid #00be3c;
+        margin: -1px 0;
+    }
+    li{
+        list-style-type: none;
+    }
+    /*滚动内容区样式*/
+    .scroll-wrap{
+        position:relative;
+        width:100%;
+        height: 300px;
+    }
+    .scroll-wrap .scroll-cont{
+        height:100%;
+        padding:0 15px;
+        overflow:hidden;
+    }
+    .scroll-wrap .scroll-cont h3{
+        font:16px/3 "Microsoft Yahei";
+        text-align: center;
+    }
+    .scroll-wrap .scroll-cont p{
+        font-size: :14px;
+        line-height: 20px;
+        text-indent: 2em;
+        margin-bottom: 10px;
+    }
+    /*滚动条样式*/
+    .scroll-wrap .scroll-bar{
+        position:absolute;
+        top:0;
+        right:0;
+        width:10px;
+        height:100%;
+        background-color: #eaeaea; 
+    }
+    .scroll-wrap .scroll-slider{
+        position:absolute;
+        top:0;
+        left:1px;
+        width:8px;
+        height:10px;
+        background: red; 
+    }
+    </style>
+    <script type="text/javascript" src="resourse/jquery-1.9.1.js">
+    var Scroll={};
+    (function(win,doc,$){
+        function CusScrollBar(options){
+            this.init(options);
+        }
+        $.extend(CusScrollBar.prototype,{
+            _init:function(options){
+                var self=this;
+                self.options={
+                    scrollDir:"y",//滚动方向
+                    contSelector:"",//滚动内容区选择器
+                    barSelector:"",//滚动条选择器
+                    sliderSelector:""//滚动滑块儿选择器
+                }
+                $.extend(true,self.options,options||{});
+                self._initDomEvent();
+                return self;
+            },
+            /**
+            *初始化DOM引用
+            *@method _initDomEvent
+            *@return {CusScrollBar}
+            */
+            _initDomEvent : function(){
+                var opts = this.options;
+                // 滚动内容区对象，必填项
+                this.$cont = $(opts.contSelector);
+                // 滚动条滑块儿对象，必填项
+                this.$slider = $(opts.sliderSelector);
+                // 滚动条对象
+                this.$bar  = opts.barSelector?$(opts.barSelector):self.$slider.parent();
+                //获取文档对象
+                this.$doc=$(doc);
+                this._initSliderDragEvent();
+            },
+            /**
+            *初始化滑块儿拖动功能
+            *@return {[Object]} [this]
+            */
+            _initSliderDragEvent : function(){
+                var opts = this.options;
+                // 滚动内容区对象，必填项
+                var slider = this.slider,
+                    sliderEl=slider[0];
+                if(sliderEl){
+                    var doc=this.$doc,
+                        dragStartPagePosition,
+                        dragStartScrollPosition,
+                        dragContBarRate;
+                    slider.on("mousedown",function(e){
+                        e.preventDefault();
+                        console.log("mousedown");
+                        doc.on("mousemove",function(e){
+                           console.log("mousemove"); 
+                        }).on("mouseup",function(e){
+                           console.log("mouseup");
+                           doc.off("mousemove mouseup")
+                       });
+                    })
+                }
+            }
+        })
+        // CusScrollBar.prototype._init=function(){
+        //     console.log("test");
+        // }
+        Scroll.CusScrollBar=CusScrollBar;
+    })(window,document,jQuery);
+    new Scroll.CusScrollBar({
+        contSelector:".scroll-wrap",
+        barSelector:".scroll-bar",
+        sliderSelector:".scroll-slider"
+    });
+    </script>
+</head>
+<body>
+    <!-- 示例容器 -->
+    <div class="scroll">
+        <!-- 标签切换区 -->
+        <ul class="scroll-tab">
+            <li class="tab-item tab-active">房产</li>
+            <li class="tab-item">家居</li>
+            <li class="tab-item">二手房</li>
+        </ul>
+        <!-- 滚动内容区 -->
+        <div class="scroll-wrap">
+            <!-- 滚动内容 -->
+            <div class="scroll-cont clearfix">
+                <h3 class="ancher">标题1</h3>
+                <div class="scroll-ol">
+                    <p>接下来，我们通过给元素添加样式，让他更美观。加入以下代码。.nav ul li a{width:80px;/*设置元素宽为80px*/height:28px;/*设置高度为28px*/line-height:28px;/*设置行距为28px，</p>
+                    <p>让文字在每行的中间位置*/background:red;/*设置元素的背景为红色*/color:#FFF;/*文字颜色是白色*/margin:5px 10px;font-size:12px;/*用12号字*/</p>
+                    <p>北京首现零首付楼盘 53万购东5环50平京楼盘直降5000 中信府 公园楼王现房</p>
+                </div>
+                <h3 class="ancher">标题2</h3>
+                <div class="scroll-ol">
+                    <p>接下来，我们通过给元素添加样式，让他更美观。加入以下代码。.nav ul li a{width:80px;/*设置元素宽为80px*/height:28px;/*设置高度为28px*/line-height:28px;/*设置行距为28px，</p>
+                    <p>让文字在每行的中间位置*/background:red;/*设置元素的背景为红色*/color:#FFF;/*文字颜色是白色*/margin:5px 10px;font-size:12px;/*用12号字*/</p>
+                </div>
+                <h3 class="ancher">标题3</h3>
+                <div class="scroll-ol">
+                    <p>北京首现零首付楼盘 53万购东5环50平京楼盘直降5000 中信府 公园楼王现房</p>
+                    <p>西3环通透2居290万 130万2居限量抢购</p>
+                    <p>接下来，我们通过给元素.nav ul li a{width:80px;/*设置元素宽为80px*/height:28px;/*设置高度为28px*/line-height:28px;/*设置行距为28px，</p>
+                    <p>让文字在每行的中间位置*/background:red;/*设置元素的背景为红色*/color:#FFF;/*文字颜色是白色*/margin:5px 10px;font-size:12px;/*用12号字*/</p>
+                </div>
+            </div>
+            <!-- 滚动条 -->
+            <div class="scroll-bar">
+                <!-- 滚动滑块儿 -->
+                <div class="scroll-slider">
+                </div>
+            </div>
+        </div>
+
+</div>
+</body>
+</html>
